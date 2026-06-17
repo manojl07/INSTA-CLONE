@@ -2,9 +2,13 @@ const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
-const authRouter = require('./src/routes/auth.route');
-const errorHandler = require('./src/middlewares/error.middleware')
 const cookieParser = require("cookie-parser");
+
+
+
+const authRouter = require('./src/routes/auth.route');
+const postRouter = require('./src/routes/post.route')
+const errorHandler = require('./src/middlewares/error.middleware')
 
 const app = express();
 app.use(helmet());
@@ -16,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRouter);
+app.use('/api/posts', postRouter)
 
 app.use(errorHandler);
 
