@@ -13,4 +13,33 @@ const createPostController = asyncHandler(async (req, res) => {
   return res.status(201).json(new ApiResponse(201, "Post created successfully", post));
 })
 
-module.exports = { createPostController }
+
+const deletePostController = asyncHandler(async (req, res) => {
+  await postService.deletePost(req.params.id, req.user.id);
+  console.log("REQ.USER =", req.user);
+  console.log("REQ.PARAMS =", req.params);
+
+  return res.status(200).json(new ApiResponse(200, "Post deleted successfully"))
+})
+
+const getUserPostsController = asyncHandler(async (req, res) => {
+  const result = await postService.getUserPosts({
+    userId: req.params.userId,
+    page: Number(req.query.page) || 1,
+    limit: Number(req.query.limit) || 12
+  })
+
+  return res.status(200).json(new ApiResponse(200, "Posts fetched Successfully", result))
+})
+
+const getFeedController = asyncHandler(async (req, res) => {
+  const result = await postService.getFeed({
+    page: Number(req.query.page) || 1,
+    limit: Number(req.query.limit) || 10
+  })
+
+  return res.status(200).json(new ApiResponse(200, "Feed fetched successfully", result))
+})
+
+
+module.exports = { createPostController, deletePostController, getUserPostsController, getFeedController }

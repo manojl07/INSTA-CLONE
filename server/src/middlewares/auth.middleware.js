@@ -34,6 +34,9 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
   req.user = decoded;
 
+  console.log("DECODED =", decoded);
+  console.log("REQ.USER =", req.user);
+
   next();
 });
 

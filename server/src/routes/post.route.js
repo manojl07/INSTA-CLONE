@@ -5,14 +5,12 @@ const authMiddleware = require('../middlewares/auth.middleware')
 const upload = require('../middlewares/upload.middleware')
 const validate = require('../middlewares/validate.middleware')
 const { createPostSchema } = require('../validators/post.validator')
-const { createPostController } = require('../controllers/post.controller')
+const { createPostController, deletePostController, getUserPostsController, getFeedController } = require('../controllers/post.controller')
 
 
-router.post('/',
-  authMiddleware,
-  upload.single("image"),
-  validate(createPostSchema),
-  createPostController
-)
+router.post('/', authMiddleware, upload.single("image"), validate(createPostSchema), createPostController)
+router.delete('/:id', authMiddleware, deletePostController)
+router.get('/user/:userId', getUserPostsController)
+router.get('/feed', getFeedController);
 
 module.exports = router;

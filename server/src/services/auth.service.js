@@ -3,6 +3,7 @@ const { uploadImage } = require("./image.service");
 const crypto = require('crypto')
 const User = require('../models/user.model')
 const Session = require('../models/session.model')
+const Post = require('../models/post.model')
 const ApiError = require('../utils/ApiError')
 const { createTokens } = require('./token.service')
 const { verifyRefreshToken } = require('../utils/jwt')
@@ -123,7 +124,9 @@ const getMe = async (userId) => {
     throw new ApiError(404, "User not found")
   }
 
-  return sanitizeUser(user);
+  const postsCount = await Post.countDocuments({user: userId})
+
+  return {...sanitizeUser(user), postsCount};
 }
 
 const logout = async (sessionId) => {

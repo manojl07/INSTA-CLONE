@@ -1,7 +1,7 @@
 const imagekit = require("../config/imageKit");
 
 const uploadImage = async (file, folder = '/insta-clone') => {
-  if(!file){
+  if (!file) {
     return null;
   }
 
@@ -16,4 +16,10 @@ const uploadImage = async (file, folder = '/insta-clone') => {
   }
 }
 
-module.exports = { uploadImage };
+const deleteImage = async (fileId) => {
+  await imagekit.deleteFile(fileId);
+
+  return true;
+}
+
+module.exports = { uploadImage, deleteImage };
