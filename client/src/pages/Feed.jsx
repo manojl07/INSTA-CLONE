@@ -1,4 +1,4 @@
-import React from 'react'
+import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query';
 import { getFeed } from '../api/post.api'
 import PostCard from '../components/PostCard'
@@ -27,6 +27,8 @@ const Feed = () => {
 
   return (
     <div className='min-h-screen bg-black py-10'>
+
+      <Link to="/profile" className='text-white'>Profile</Link>
 
       <div className='max-w-xl mx-auto space-y-6'>
 
