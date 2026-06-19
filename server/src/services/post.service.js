@@ -10,8 +10,24 @@ const sanitizePost = (post) => ({
   likesCount: post.likesCount,
   commentsCount: post.commentsCount,
   isEdited: post.isEdited,
-  user: post,
+  user: post.user,
   createdAt: post.createdAt,
+});
+
+const sanitizeFeedPost = (post) => ({
+  id: post._id,
+  caption: post.caption,
+  imageUrl: post.imageUrl,
+  likesCount: post.likesCount,
+  commentsCount: post.commentsCount,
+  isEdited: post.isEdited,
+  createdAt: post.createdAt,
+
+  user: {
+    id: post.user._id,
+    username: post.user.username,
+    profileImg: post.user.profileImg,
+  }
 });
 
 const createPost = async ({ caption, image, userId }) => {
@@ -49,43 +65,43 @@ const deletePost = async (postId, userId) => {
   return true;
 }
 
-const getUserPosts = async ({userId, page=1, limit=12}) => {
+const getUserPosts = async ({ userId, page = 1, limit = 12 }) => {
   const skip = (page - 1) * limit;
 
   const [posts, total] = await Promise.all([Post
-    .find({user: userId})
-    .sort({createdAt: -1})
+    .find({ user: userId })
+    .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit),
 
-    Post.countDocuments({user: userId})
+  Post.countDocuments({ user: userId })
   ]);
 
   return {
     posts: posts.map(sanitizePost),
-    pagination: {page, limit, total, totalPages: Math.ceil(total/limit)}
+    pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
   }
 }
 
-const getFeed = async ({page=1, limit=10}) => {
+const getFeed = async ({ page = 1, limit = 10 }) => {
   const skip = (page - 1) * limit;
 
   const [posts, total] = await Promise.all([
     Post.find()
-    .populate("user", "username profileImg")
-    .sort({createdAt: -1})
-    .skip(skip)
-    .limit(limit),
+      .populate("user", "username profileImg")
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
 
     Post.countDocuments()
   ])
 
   return {
-    posts,
-    pagination: {page, limit, total, totalPages: Math.ceil(total/limit)}
+    posts: posts.map(sanitizeFeedPost),
+    pagination: {
+      page, limit, total, totalPages: Math.ceil(total / limit)
+    }
   }
 }
-
-
 
 module.exports = { createPost, deletePost, getUserPosts, getFeed }

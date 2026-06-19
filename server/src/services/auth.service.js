@@ -73,9 +73,9 @@ const register = async ({
     throw new ApiError(409, "User already exists")
   }
 
-  const imageUrl = profileImage
+  const uploadedImage = profileImage
     ? await uploadImage(profileImage)
-    : undefined;
+    : null;
 
   const userData = {
     username,
@@ -84,8 +84,9 @@ const register = async ({
     bio,
   };
 
-  if (imageUrl) {
-    userData.profileImg = imageUrl;
+  if (uploadedImage) {
+    userData.profileImg = uploadedImage.imageUrl;
+    userData.profileImgFileId = uploadedImage.imageFileId;
   }
 
   const user = await User.create(userData);
@@ -124,9 +125,9 @@ const getMe = async (userId) => {
     throw new ApiError(404, "User not found")
   }
 
-  const postsCount = await Post.countDocuments({user: userId})
+  const postsCount = await Post.countDocuments({ user: userId })
 
-  return {...sanitizeUser(user), postsCount};
+  return { ...sanitizeUser(user), postsCount };
 }
 
 const logout = async (sessionId) => {

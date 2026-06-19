@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     minLength: 3,
     maxLength: 30,
     index: true,
-    lowercase:true,
+    lowercase: true,
   },
   email: {
     type: String,
@@ -34,8 +34,12 @@ const userSchema = new mongoose.Schema({
   },
   profileImg: {
     type: String,
-    default:
-      "https://ik.imagekit.io/8r9z7lciy/profileImg.webp?updatedAt=1781324968498"
+    default: "https://ik.imagekit.io/..."
+  },
+
+  profileImgFileId: {
+    type: String,
+    default: null
   },
   followers: [
     {
