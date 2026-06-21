@@ -2,6 +2,7 @@ const Post = require('../models/post.model')
 const ApiError = require('../utils/ApiError')
 const { uploadImage } = require('./image.service')
 const { deleteImage } = require('./image.service')
+const Like = require('../models/like.model');
 
 const sanitizePost = (post) => ({
   id: post._id,
@@ -104,4 +105,59 @@ const getFeed = async ({ page = 1, limit = 10 }) => {
   }
 }
 
-module.exports = { createPost, deletePost, getUserPosts, getFeed }
+const toggleLike = async (postId, userId) => {
+  const post = await Post.findById(postId);
+
+  console.log("POST FOUND:", post);
+
+  const existingLike = await Like.findOne({
+    user: userId,
+    post: postId,
+  });
+
+  console.log("EXISTING LIKE:", existingLike);
+
+  if (existingLike) {
+
+    await Like.findByIdAndDelete(
+      existingLike._id
+    );
+
+    post.likesCount = Math.max(
+      0,
+      post.likesCount - 1
+    );
+
+    await post.save();
+
+    return {
+      liked: false,
+      likesCount: post.likesCount,
+    };
+  }
+
+  await Like.create({
+    user: userId,
+    post: postId,
+  });
+
+  post.likesCount += 1;
+
+  console.log("AFTER INCREMENT:", post.likesCount);
+
+  await post.save();
+
+  const updated = await Post.findById(postId);
+
+  console.log(
+    "DB AFTER LIKE:",
+    updated.likesCount
+  );
+
+  return {
+    liked: true,
+    likesCount: updated.likesCount,
+  };
+};
+
+module.exports = { createPost, deletePost, getUserPosts, getFeed, toggleLike }

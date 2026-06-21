@@ -41,5 +41,11 @@ const getFeedController = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "Feed fetched successfully", result))
 })
 
+const toggleLikeController = asyncHandler(async (req,res) => {
+  const result = await postService.toggleLike(req.params.postId, req.user.id);
 
-module.exports = { createPostController, deletePostController, getUserPostsController, getFeedController }
+  return res.status(200).json(new ApiResponse(200, "Like updated", result))
+})
+
+
+module.exports = { createPostController, deletePostController, getUserPostsController, getFeedController, toggleLikeController }
