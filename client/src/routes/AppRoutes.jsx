@@ -5,37 +5,31 @@ import Profile from '../pages/Profile'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
 import PublicRoute from '../components/PublicRoute'
+import MainLayout from '../layouts/MainLayout'
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route
-        path='/login'
-        element={
-          <PublicRoute><
-            Login />
-          </PublicRoute>} />
 
-      <Route
-        path='/register'
-        element={
-          <PublicRoute>
-            <Register />
-          </PublicRoute>} />
 
-      <Route
-        path='/'
-        element={
-          <ProtectedRoute>
-            <Feed />
-          </ProtectedRoute>
-        } />
+      <Route path='/login' element={<PublicRoute><Login /></PublicRoute>} />
 
-      <Route path='/profile' element={
+      <Route path='/register' element={<PublicRoute><Register /></PublicRoute>} />
+
+
+      <Route path="/" element={
         <ProtectedRoute>
-          <Profile />
-        </ProtectedRoute>
-      } />
+          <MainLayout>
+            <Feed />
+          </MainLayout>
+        </ProtectedRoute>} />
+
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <MainLayout>
+            <Profile />
+          </MainLayout>
+        </ProtectedRoute>} />
 
     </Routes>
   )
