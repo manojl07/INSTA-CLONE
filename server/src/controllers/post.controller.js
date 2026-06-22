@@ -34,6 +34,7 @@ const getUserPostsController = asyncHandler(async (req, res) => {
 
 const getFeedController = asyncHandler(async (req, res) => {
   const result = await postService.getFeed({
+    userId: req.user?.id,
     page: Number(req.query.page) || 1,
     limit: Number(req.query.limit) || 10
   })

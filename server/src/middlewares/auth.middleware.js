@@ -27,10 +27,14 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     });
   }
 
+  console.log("AUTH HEADER =", req.headers.authorization);
+
   const decoded = jwt.verify(
     token,
     process.env.JWT_ACCESS_SECRET
   );
+
+  console.log("AUTH HEADER:", req.headers.authorization);
 
   req.user = decoded;
 

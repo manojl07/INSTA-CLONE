@@ -11,7 +11,7 @@ const { createPostController, deletePostController, getUserPostsController, getF
 router.post('/', authMiddleware, upload.single("image"), validate(createPostSchema), createPostController)
 router.delete('/:id', authMiddleware, deletePostController)
 router.get('/user/:userId', getUserPostsController)
-router.get('/feed', getFeedController);
+router.get('/feed', authMiddleware, getFeedController);
 router.post('/:postId/like', authMiddleware, toggleLikeController)
 
 module.exports = router;
