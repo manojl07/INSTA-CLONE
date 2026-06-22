@@ -17,3 +17,9 @@ export const createPost = async (formData) => {
 
   return data;
 }
+
+export const toggleLike = async (postId) => {
+  const {data} = await API.post(`/posts/${postId}/like`)
+
+  return data;
+}
