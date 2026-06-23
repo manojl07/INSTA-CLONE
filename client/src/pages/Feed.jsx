@@ -28,7 +28,7 @@ const Feed = () => {
   return (
     <div className='min-h-screen bg-black py-10'>
 
-      <div className='max-w-xl mx-auto space-y-6'>
+      <div className='max-w-lg mx-auto space-y-5'>
 
         {data.data.posts.map((post) => {
           return (

@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 
 const authRouter = require('./src/routes/auth.route');
 const postRouter = require('./src/routes/post.route')
+const commentRouter = require('../server/src/routes/comment.route')
 const errorHandler = require('./src/middlewares/error.middleware')
 
 const app = express();
@@ -23,7 +24,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRouter);
-app.use('/api/posts', postRouter)
+app.use('/api/posts', postRouter);
+app.use('/api/comments', commentRouter)
 
 app.use(errorHandler);
 
