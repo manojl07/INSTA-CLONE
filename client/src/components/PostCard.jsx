@@ -1,4 +1,4 @@
-import React from "react";
+import CommentModal from "./CommentModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Heart,
@@ -8,8 +8,11 @@ import {
 } from "lucide-react";
 
 import { toggleLike } from "../api/post.api";
+import { useState } from "react";
 
 const PostCard = ({ post }) => {
+
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const likeMutation = useMutation({
@@ -47,9 +50,9 @@ const PostCard = ({ post }) => {
 
                     likesCount: p.isLiked
                       ? Math.max(
-                          0,
-                          p.likesCount - 1
-                        )
+                        0,
+                        p.likesCount - 1
+                      )
                       : p.likesCount + 1,
                   };
                 }),
@@ -128,18 +131,17 @@ const PostCard = ({ post }) => {
           >
             <Heart
               size={26}
-              className={`transition-all duration-300 ${
-                post.isLiked
-                  ? "fill-red-500 text-red-500 scale-110"
-                  : "text-white"
-              }`}
+              className={`transition-all duration-300 ${post.isLiked
+                ? "fill-red-500 text-red-500 scale-110"
+                : "text-white"
+                }`}
             />
           </button>
 
-          <button>
+          <button onClick={() => setIsCommentsOpen(true)} >
             <MessageCircle
               size={24}
-              className="text-white"
+              className="text-white hover:text-zinc-300 transition"
             />
           </button>
 
@@ -159,6 +161,8 @@ const PostCard = ({ post }) => {
             : "likes"}
         </p>
 
+
+
         {/* Caption */}
         {post.caption && (
           <p className="mt-2 text-sm text-white">
@@ -170,6 +174,22 @@ const PostCard = ({ post }) => {
           </p>
         )}
 
+        {post.commentsCount > 0 && (
+          <p
+            className="
+      mt-1
+      text-sm
+      text-zinc-400
+      cursor-pointer
+      hover:text-zinc-300
+      transition
+    "
+            onClick={() => setIsCommentsOpen(true)}
+          >
+            View all {post.commentsCount} comments
+          </p>
+        )}
+
         {/* Date */}
         <p className="mt-2 text-xs uppercase tracking-wide text-zinc-500">
           {new Date(
@@ -177,6 +197,12 @@ const PostCard = ({ post }) => {
           ).toLocaleDateString()}
         </p>
       </div>
+
+      <CommentModal
+        isOpen={isCommentsOpen}
+        onClose={() => setIsCommentsOpen(false)}
+        post={post}
+      />
     </div>
   );
 };

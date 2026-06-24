@@ -10,14 +10,16 @@ const createPostController = asyncHandler(async (req, res) => {
     userId: req.user.id,
   })
 
+  console.log("BODY =", req.body);
+  console.log("FILE =", req.file);
+  console.log("USER =", req.user);
+
   return res.status(201).json(new ApiResponse(201, "Post created successfully", post));
 })
 
 
 const deletePostController = asyncHandler(async (req, res) => {
   await postService.deletePost(req.params.id, req.user.id);
-  console.log("REQ.USER =", req.user);
-  console.log("REQ.PARAMS =", req.params);
 
   return res.status(200).json(new ApiResponse(200, "Post deleted successfully"))
 })
@@ -42,7 +44,7 @@ const getFeedController = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "Feed fetched successfully", result))
 })
 
-const toggleLikeController = asyncHandler(async (req,res) => {
+const toggleLikeController = asyncHandler(async (req, res) => {
   const result = await postService.toggleLike(req.params.postId, req.user.id);
 
   return res.status(200).json(new ApiResponse(200, "Like updated", result))
