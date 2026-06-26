@@ -8,9 +8,6 @@ const imagekit = new ImageKit({
 
 });
 
-console.log(
-  process.env.IMAGEKIT_PRIVATE_KEY
-);
 
 
 module.exports = imagekit;

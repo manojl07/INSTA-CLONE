@@ -1,6 +1,5 @@
-import React from 'react'
 
-const ProfilePostsGrid = ({ posts }) => {
+const ProfilePostsGrid = ({ posts, onPostClick }) => {
 
   if (!posts.length) {
     return (
@@ -11,7 +10,8 @@ const ProfilePostsGrid = ({ posts }) => {
     <div className='max-w-2xl mx-auto grid grid-cols-3 gap-1 '>
 
       {posts.map((post) => (
-        <div key={post.id || post._id} className="group relative aspect-square overflow-hidden cursor-pointer">
+        <div key={post.id || post._id} onClick={() => onPostClick(post)} className="group relative aspect-square overflow-hidden cursor-pointer" >
+
           <img src={post.imageUrl} alt="" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
 
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center" >

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getFeed } from '../api/post.api'
-import PostCard from '../components/PostCard'
-import Loader from '../components/Loader';
+import PostCard from '../components//post/PostCard'
+import Loader from '../components/UI/Loader';
 
 const Feed = () => {
 

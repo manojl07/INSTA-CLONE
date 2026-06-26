@@ -10,10 +10,6 @@ const createPostController = asyncHandler(async (req, res) => {
     userId: req.user.id,
   })
 
-  console.log("BODY =", req.body);
-  console.log("FILE =", req.file);
-  console.log("USER =", req.user);
-
   return res.status(201).json(new ApiResponse(201, "Post created successfully", post));
 })
 
@@ -27,9 +23,10 @@ const deletePostController = asyncHandler(async (req, res) => {
 const getUserPostsController = asyncHandler(async (req, res) => {
   const result = await postService.getUserPosts({
     userId: req.params.userId,
+    currentUserId: req.user.id,
     page: Number(req.query.page) || 1,
-    limit: Number(req.query.limit) || 12
-  })
+    limit: Number(req.query.limit) || 12,
+  });
 
   return res.status(200).json(new ApiResponse(200, "Posts fetched Successfully", result))
 })

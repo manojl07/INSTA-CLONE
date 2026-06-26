@@ -13,7 +13,7 @@ const {createCommentController, getCommentController} = require('../controllers/
 
 router.post('/', authMiddleware, upload.single("image"), validate(createPostSchema), createPostController)
 router.delete('/:id', authMiddleware, deletePostController)
-router.get('/user/:userId', getUserPostsController)
+router.get('/user/:userId', authMiddleware, getUserPostsController)
 router.get('/feed', authMiddleware, getFeedController);
 router.post('/:postId/like', authMiddleware, toggleLikeController)
 router.post('/:postId/comments', authMiddleware, createCommentController)

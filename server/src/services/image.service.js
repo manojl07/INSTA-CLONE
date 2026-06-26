@@ -1,8 +1,5 @@
 const imagekit = require("../config/imageKit");
 
-
-console.log("Uploading...");
-console.log(process.env.IMAGEKIT_PRIVATE_KEY);
 const uploadImage = async (file, folder = '/insta-clone') => {
   if (!file) {
     return null;

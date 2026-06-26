@@ -151,7 +151,7 @@ const refresh = async ({ refreshToken, deviceId, userAgent, ipAddress }) => {
   const tokenHash = hashToken(refreshToken)
 
   // find session
-  const session = await Session.findOne({ tokenHash });
+  const session = await Session.findOne({ tokenHash, deviceId });
 
   if (!session) {
     throw new ApiError(401, "Invalid refresh token")

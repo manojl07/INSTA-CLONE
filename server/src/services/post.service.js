@@ -11,26 +11,16 @@ const sanitizePost = (post) => ({
   likesCount: post.likesCount,
   commentsCount: post.commentsCount,
   isEdited: post.isEdited,
-  user: post.user,
-  createdAt: post.createdAt,
-});
-
-const sanitizeFeedPost = (post) => ({
-  id: post._id,
-  caption: post.caption,
-  imageUrl: post.imageUrl,
-  likesCount: post.likesCount,
-  commentsCount: post.commentsCount,
-  isEdited: post.isEdited,
-  isLiked: post.isLiked,
+  isLiked: post.isLiked ?? false,
   createdAt: post.createdAt,
 
   user: {
     id: post.user._id,
     username: post.user.username,
     profileImg: post.user.profileImg,
-  }
+  },
 });
+
 
 const createPost = async ({ caption, image, userId }) => {
   if (!image) {
@@ -67,23 +57,47 @@ const deletePost = async (postId, userId) => {
   return true;
 }
 
-const getUserPosts = async ({ userId, page = 1, limit = 12 }) => {
+const getUserPosts = async ({
+  userId,
+  currentUserId,
+  page = 1,
+  limit = 12,
+}) => {
   const skip = (page - 1) * limit;
 
-  const [posts, total] = await Promise.all([Post
-    .find({ user: userId })
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit),
+  const [posts, total, userLikes] = await Promise.all([
+    Post.find({ user: userId })
+      .populate("user", "username profileImg")
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
 
-  Post.countDocuments({ user: userId })
+    Post.countDocuments({ user: userId }),
+
+    Like.find({ user: currentUserId }).select("post"),
   ]);
 
+  const likedPosts = new Set(
+    userLikes.map((like) => like.post.toString())
+  );
+
+  const formattedPosts = posts.map((post) => ({
+    ...post,
+    isLiked: likedPosts.has(post._id.toString()),
+  }));
+
   return {
-    posts: posts.map(sanitizePost),
-    pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
-  }
-}
+    posts: formattedPosts.map(sanitizePost),
+
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+};
 
 const getFeed = async ({ page = 1, limit = 10, userId }) => {
   const skip = (page - 1) * limit;
@@ -109,7 +123,7 @@ const getFeed = async ({ page = 1, limit = 10, userId }) => {
   }))
 
   return {
-    posts: formattedPosts.map(sanitizeFeedPost),
+    posts: formattedPosts.map(sanitizePost),
     pagination: {
       page,
       limit,
@@ -122,14 +136,14 @@ const getFeed = async ({ page = 1, limit = 10, userId }) => {
 const toggleLike = async (postId, userId) => {
   const post = await Post.findById(postId);
 
-  console.log("POST FOUND:", post);
+
 
   const existingLike = await Like.findOne({
     user: userId,
     post: postId,
   });
 
-  console.log("EXISTING LIKE:", existingLike);
+
 
   if (existingLike) {
 
@@ -157,16 +171,12 @@ const toggleLike = async (postId, userId) => {
 
   post.likesCount += 1;
 
-  console.log("AFTER INCREMENT:", post.likesCount);
+  
 
   await post.save();
 
   const updated = await Post.findById(postId);
 
-  console.log(
-    "DB AFTER LIKE:",
-    updated.likesCount
-  );
 
   return {
     liked: true,
