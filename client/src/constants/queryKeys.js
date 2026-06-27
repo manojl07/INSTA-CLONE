@@ -1,5 +1,5 @@
-export queryKeys = {
+export const queryKeys = {
   feed: ["feed"],
-  userPost: (userId) => ["user-posts", userId],
+  userPosts: (userId) => ["user-posts", userId],
   comments: (postId) => ["comments", postId],
 }

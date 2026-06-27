@@ -18,6 +18,11 @@ export const getMe = async () => {
   return data;
 }
 
+export const updateProfile = async (formData) => {
+  const {data} = await API.patch('/auth/profile', formData)
+
+  return data;
+}
 
 
 
