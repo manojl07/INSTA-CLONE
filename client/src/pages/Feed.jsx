@@ -2,11 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { getFeed } from '../api/post.api'
 import PostCard from '../components//post/PostCard'
 import Loader from '../components/UI/Loader';
+import {queryKeys} from '../constants/queryKeys'
 
 const Feed = () => {
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["feed"],
+    queryKey: queryKeys.feed,
     queryFn: () => getFeed({ page: 1, limit: 10 })
   });
 

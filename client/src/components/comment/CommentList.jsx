@@ -3,6 +3,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteComment, getComments } from '../../api/comment.api';
 import CommentItem from './CommentItem';
+import {queryKeys} from '../../constants/queryKeys'
 
 const CommentList = ({ postId, queryKey }) => {
 
@@ -19,7 +20,7 @@ const CommentList = ({ postId, queryKey }) => {
     mutationFn: deleteComment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey })
-      queryClient.invalidateQueries({ queryKey: ["feed"] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.feed })
       queryClient.invalidateQueries({ queryKey: ["user-posts"] })
     }
   })

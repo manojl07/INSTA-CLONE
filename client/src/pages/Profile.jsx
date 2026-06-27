@@ -6,6 +6,7 @@ import ProfilePostsGrid from '../components/profile/ProfilePostGrid';
 import { useAuth } from "../hooks/useAuth";
 import { useState } from 'react';
 import PostModal from "../components/post/PostModal";
+import {queryKeys} from '../constants/queryKeys'
 
 const Profile = () => {
 
@@ -16,7 +17,7 @@ const Profile = () => {
   const { user } = useAuth();
 
   const { data: postsData, isLoading, isError, error, } = useQuery({
-    queryKey: ["user-posts", user?.id],
+    queryKey: queryKeys.userPosts(user.id),
     queryFn: () => getUserPosts({ userId: user.id }),
     enabled: !!user,
   });

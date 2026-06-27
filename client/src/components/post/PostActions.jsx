@@ -1,7 +1,7 @@
 import { Heart, MessageCircle, Send } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toggleLike } from '../../api/post.api'
-
+import {queryKeys} from '../../constants/queryKeys'
 
 
 const PostActions = ({ post, queryKey, onCommentClick }) => {
@@ -57,7 +57,7 @@ const PostActions = ({ post, queryKey, onCommentClick }) => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["feed"],
+        queryKey: queryKeys.feed,
       });
 
       queryClient.invalidateQueries({

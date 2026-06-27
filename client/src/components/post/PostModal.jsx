@@ -1,4 +1,9 @@
 import { useEffect } from "react";
+import { useState } from "react";
+
+import DeletePostDialog from "./DeletePostDialog";
+
+import useDeletePost from "../../hooks/useDeletePost";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useAuth } from "../../hooks/useAuth";
@@ -9,6 +14,7 @@ import PostMeta from "./PostMeta";
 
 import CommentList from "../comment/CommentList";
 import CommentInput from "../comment/CommentInput";
+import {queryKeys} from '../../constants/queryKeys'
 
 const PostModal = ({
   isOpen,
@@ -18,6 +24,11 @@ const PostModal = ({
 
   const { user } = useAuth();
   const queryClient = useQueryClient();
+
+  const [showDeleteDialog, setShowDeleteDialog] =
+    useState(false);
+
+  const { deletePost, isDeleting, } = useDeletePost();
 
   const userPosts = queryClient.getQueryData([
     "user-posts",
@@ -83,6 +94,24 @@ const PostModal = ({
           <PostHeader
             post={currentPost}
             onClose={onClose}
+            onDeleteClick={() => setShowDeleteDialog(true)}
+          />
+
+          <DeletePostDialog
+            isOpen={showDeleteDialog}
+            isDeleting={isDeleting}
+            onClose={() =>
+              setShowDeleteDialog(false)
+            }
+            onDelete={() => {
+              deletePost(currentPost.id, {
+                onSuccess: () => {
+                  setShowDeleteDialog(false);
+
+                  onClose();
+                },
+              });
+            }}
           />
 
           {/* Caption */}
@@ -99,7 +128,7 @@ const PostModal = ({
 
             <CommentList
               postId={currentPost.id}
-              queryKey={["comments", currentPost.id]}
+              queryKey={queryKeys.comments(currentPost.id)}
             />
 
           </div>
