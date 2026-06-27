@@ -99,6 +99,16 @@ const getMeController = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "User fetched successfully", user))
 })
 
+const updateProfileController = asyncHandler(async (req, res) => {
+  const updatedUser = await authService.updateProfile({
+    userId: req.user.id,
+    bio: req.body.bio,
+    profileImage: req.file
+  })
+  
+  return res.status(200).json(new ApiResponse(200, "Profile updated successfully", updatedUser))
+})
+
 const refreshController = asyncHandler(async (req, res) => {
   const result = await authService.refresh({
     refreshToken: req.cookies.refreshToken,
@@ -155,6 +165,6 @@ const logoutAllController = asyncHandler(async (req, res) => {
   );
 });
 
-module.exports = { registerController, loginController, getMeController, refreshController, logoutController, logoutAllController }
+module.exports = { registerController, loginController, getMeController, updateProfileController, refreshController, logoutController, logoutAllController }
 
 

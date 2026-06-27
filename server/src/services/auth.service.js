@@ -1,4 +1,4 @@
-const { uploadImage } = require("./image.service");
+const { uploadImage, deleteImage } = require("./image.service");
 
 const crypto = require('crypto')
 const User = require('../models/user.model')
@@ -130,6 +130,37 @@ const getMe = async (userId) => {
   return { ...sanitizeUser(user), postsCount };
 }
 
+const updateProfile = async ({userId, bio, profileImage}) => {
+  const user = await User.findById(userId)
+
+  if(!user){
+    throw new ApiError(404, "User not found")
+  }
+
+  // Update bio only if provided 
+  if(bio !== undefined){
+    user.bio = bio
+  }
+
+  // Replace profile image
+  if(profileImage){
+    if(user.profileImgFileId){
+      await deleteImage(user.profileImgFileId);
+    }
+
+    const uploaded = await uploadImage(profileImage, '/insta-clone/profile-images')
+
+    user.profileImg = uploaded.imageUrl;
+    user.profileImgFileId = uploaded.imageFileId
+  }
+
+  await user.save();
+
+  const postsCount = await Post.countDocuments({user: user._id})
+
+  return {...sanitizeUser(user), postsCount}
+}
+
 const logout = async (sessionId) => {
   await Session.findByIdAndDelete(sessionId);
 
@@ -182,4 +213,4 @@ const refresh = async ({ refreshToken, deviceId, userAgent, ipAddress }) => {
 
 }
 
-module.exports = { register, login, getMe, refresh, logout, logoutAll }
+module.exports = { register, login, getMe, updateProfile, refresh, logout, logoutAll }

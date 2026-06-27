@@ -10,12 +10,14 @@ const {
   loginSchema,
   refreshSchema,
   logoutSchema,
+  updateProfileSchema
 } = require('../validators/auth.validator');
 
 const {
   registerController,
   loginController,
   getMeController,
+  updateProfileController,
   refreshController,
   logoutController,
   logoutAllController
@@ -35,6 +37,14 @@ router.post(
 );
 
 router.get('/me', authMiddleware, getMeController)
+
+router.patch('/profile', 
+  authMiddleware,
+  upload.single("profileImage"),
+  validate(updateProfileSchema),
+  updateProfileController
+
+ )
 
 router.post(
   "/refresh",
