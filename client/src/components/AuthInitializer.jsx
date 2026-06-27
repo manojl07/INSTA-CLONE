@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import { getMe } from "../api/auth.api";
 import { useAuth } from "../hooks/useAuth";
 import { registerLogoutHandler } from "../services/authManager";
-import { logoutUser } from "../services/auth.service";
 
 const AuthInitializer = ({ children }) => {
   const {
@@ -33,14 +32,13 @@ const AuthInitializer = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    const unregister = registerLogoutHandler(async () => {
-      await logoutUser();
-
+    const unregister = registerLogoutHandler(async ({ sessionExpired }) => {
       queryClient.clear();
-
       setUser(null);
 
-      toast.error("Session expired. Please login again.");
+      if (sessionExpired) {
+        toast.error("Session expired. Please login again.");
+      }
 
       navigate("/login", {
         replace: true,

@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
   },
   profileImg: {
     type: String,
-    default: "https://ik.imagekit.io/..."
+    default: "https://ik.imagekit.io/8r9z7lciy/profileImg.webp?updatedAt=1781324968498"
   },
 
   profileImgFileId: {

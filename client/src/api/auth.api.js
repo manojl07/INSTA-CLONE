@@ -24,6 +24,12 @@ export const updateProfile = async (formData) => {
   return data;
 }
 
+export const logoutUser = async () => {
+  const {data} = await API.post('/auth/logout');
+
+  return data;
+}
+
 
 
 

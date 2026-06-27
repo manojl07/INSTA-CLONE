@@ -110,39 +110,38 @@ const updateProfileController = asyncHandler(async (req, res) => {
 })
 
 const refreshController = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  const deviceId = req.cookies.deviceId;
+
+  if (!refreshToken || !deviceId) {
+    return res
+      .status(401)
+      .json(new ApiResponse(401, "Authentication required"));
+  }
+
   const result = await authService.refresh({
-    refreshToken: req.cookies.refreshToken,
-    deviceId: req.cookies.deviceId,
+    refreshToken,
+    deviceId,
     userAgent: req.get("user-agent"),
-    ipAddress: req.ip
-  })
+    ipAddress: req.ip,
+  });
 
-  res.cookie(
-    "accessToken",
-    result.accessToken,
-    accessCookieOptions
-  );
+  res.cookie("accessToken", result.accessToken, accessCookieOptions);
+  res.cookie("refreshToken", result.refreshToken, refreshCookieOptions);
 
-  res.cookie(
-    "refreshToken",
-    result.refreshToken,
-    refreshCookieOptions
-  );
-
-return res.status(200).json(
-  new ApiResponse(
-    200,
-    "Token refreshed",
-    {
+  return res.status(200).json(
+    new ApiResponse(200, "Token refreshed", {
       ...result,
-      deviceId: req.cookies.deviceId
-    }
-  )
-);
-})
+      deviceId,
+    })
+  );
+});
 
 const logoutController = asyncHandler(async (req, res) => {
-  await authService.logout(req.body.sessionId);
+  await authService.logout(
+    req.cookies.refreshToken,
+    req.cookies.deviceId
+  );
 
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");

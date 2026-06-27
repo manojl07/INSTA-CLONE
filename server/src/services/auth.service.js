@@ -130,21 +130,21 @@ const getMe = async (userId) => {
   return { ...sanitizeUser(user), postsCount };
 }
 
-const updateProfile = async ({userId, bio, profileImage}) => {
+const updateProfile = async ({ userId, bio, profileImage }) => {
   const user = await User.findById(userId)
 
-  if(!user){
+  if (!user) {
     throw new ApiError(404, "User not found")
   }
 
   // Update bio only if provided 
-  if(bio !== undefined){
+  if (bio !== undefined) {
     user.bio = bio
   }
 
   // Replace profile image
-  if(profileImage){
-    if(user.profileImgFileId){
+  if (profileImage) {
+    if (user.profileImgFileId) {
       await deleteImage(user.profileImgFileId);
     }
 
@@ -156,22 +156,29 @@ const updateProfile = async ({userId, bio, profileImage}) => {
 
   await user.save();
 
-  const postsCount = await Post.countDocuments({user: user._id})
+  const postsCount = await Post.countDocuments({ user: user._id })
 
-  return {...sanitizeUser(user), postsCount}
+  return { ...sanitizeUser(user), postsCount }
 }
 
-const logout = async (sessionId) => {
-  await Session.findByIdAndDelete(sessionId);
+const logout = async (refreshToken, deviceId) => {
+  const tokenHash = hashToken(refreshToken);
+
+  await Session.findOneAndDelete({
+    tokenHash,
+    deviceId,
+  });
 
   return true;
-}
+};
 
 const logoutAll = async (userId) => {
-  await Session.deleteMany({ user: userId })
+
+  const tokenHash = hashToken(refreshToken);
+await Session.findByIdAndDelete({ tokenHash, deviceId })
 
   return true;
-}
+};
 
 const refresh = async ({ refreshToken, deviceId, userAgent, ipAddress }) => {
 

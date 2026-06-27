@@ -37,10 +37,8 @@ const refreshSchema = z.object({
   deviceId: z.string()
 });
 
-const logoutSchema = z.object({ sessionId: z.string() })
-
 const updateProfileSchema = z.object({
   bio: z.string().trim().max(150, "Bio cannot exceed 150 characters").optional(),
 })
 
-module.exports = { registerSchema, loginSchema, refreshSchema, logoutSchema, updateProfileSchema }
+module.exports = { registerSchema, loginSchema, refreshSchema, updateProfileSchema }

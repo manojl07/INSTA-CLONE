@@ -74,16 +74,20 @@ API.interceptors.response.use(
 
       return API(originalRequest);
     } catch (refreshError) {
-      
       processQueue(refreshError);
 
-      await triggerLogout();
+      const hadRefreshCookie =
+        document.cookie.includes("deviceId");
+
+      if (hadRefreshCookie) {
+        await triggerLogout();
+      }
 
       return Promise.reject(refreshError);
 
-    } finally {
-      isRefreshing = false;
-    }
+  } finally {
+    isRefreshing = false;
+  }
   }
 );
 
