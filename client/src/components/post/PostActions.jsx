@@ -1,7 +1,9 @@
 import { Heart, MessageCircle, Send } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toggleLike } from '../../api/post.api'
-import {queryKeys} from '../../constants/queryKeys'
+import { queryKeys } from '../../constants/queryKeys'
+
+import { motion } from "framer-motion";
 
 
 const PostActions = ({ post, queryKey, onCommentClick }) => {
@@ -75,18 +77,40 @@ const PostActions = ({ post, queryKey, onCommentClick }) => {
         onClick={() => likeMutation.mutate()}
         className="flex items-center gap-2"
       >
-        <Heart
-          size={24}
-          className={
+
+        <motion.div
+          animate={
             post.isLiked
-              ? "fill-red-500 text-red-500"
-              : "text-white"
+              ? {
+                scale: [1, 1.35, 0.95, 1],
+                rotate: [0, -8, 8, 0],
+              }
+              : {
+                scale: 1,
+                rotate: 0,
+              }
           }
-        />
+          whileTap={{
+            scale: 0.75,
+          }}
+          transition={{
+            duration: 0.35,
+          }}
+        >
+          <Heart
+            size={24}
+            className={
+              post.isLiked
+                ? "fill-red-500 text-red-500"
+                : "text-white"
+            }
+          />
+        </motion.div>
 
         <span className="text-white text-sm font-medium">
           {post.likesCount}
         </span>
+
       </button>
 
       {/* Comment */}
