@@ -18,6 +18,7 @@ const sanitizePost = (post) => ({
     id: post.user._id,
     username: post.user.username,
     profileImg: post.user.profileImg,
+    isFollowing: post.user.isFollowing ?? false,
   },
 });
 
@@ -67,7 +68,10 @@ const getUserPosts = async ({
 
   const [posts, total, userLikes] = await Promise.all([
     Post.find({ user: userId })
-      .populate("user", "username profileImg")
+      .populate(
+        "user",
+        "username profileImg followers"
+      )
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
@@ -84,7 +88,16 @@ const getUserPosts = async ({
 
   const formattedPosts = posts.map((post) => ({
     ...post,
+
     isLiked: likedPosts.has(post._id.toString()),
+
+    user: {
+      ...post.user,
+
+      isFollowing: post.user.followers.some(
+        (id) => id.toString() === currentUserId
+      ),
+    },
   }));
 
   return {
@@ -104,7 +117,10 @@ const getFeed = async ({ page = 1, limit = 10, userId }) => {
 
   const [posts, total, userLikes] = await Promise.all([
     Post.find()
-      .populate("user", "username profileImg")
+      .populate(
+        "user",
+        "username profileImg followers"
+      )
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
@@ -118,9 +134,19 @@ const getFeed = async ({ page = 1, limit = 10, userId }) => {
 
   const likedPosts = new Set(userLikes.map(like => like.post.toString()))
 
-  const formattedPosts = posts.map(post => ({
-    ...post, isLiked: likedPosts.has(post._id.toString())
-  }))
+  const formattedPosts = posts.map((post) => ({
+    ...post,
+
+    isLiked: likedPosts.has(post._id.toString()),
+
+    user: {
+      ...post.user,
+
+      isFollowing: post.user.followers.some(
+        (id) => id.toString() === userId
+      ),
+    },
+  }));
 
   return {
     posts: formattedPosts.map(sanitizePost),
@@ -171,7 +197,7 @@ const toggleLike = async (postId, userId) => {
 
   post.likesCount += 1;
 
-  
+
 
   await post.save();
 

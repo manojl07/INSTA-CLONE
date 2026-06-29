@@ -3,12 +3,21 @@ import { useState } from "react";
 import PostActions from "./PostActions";
 import PostModal from "./PostModal";
 import useProfileNavigation from "../../hooks/useProfileNavigation";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import FollowTextButton from "../social/FollowTextButton";
 
 const PostCard = ({ post }) => {
+
+  const { user: currentUser } = useAuth();
+
+  const isOwnPost = currentUser?.id === post.user.id;
 
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
 
   const goToProfile = useProfileNavigation();
+
+  console.log(post.user.isFollowing);
 
 
 
@@ -20,19 +29,30 @@ const PostCard = ({ post }) => {
 
         <div className="flex items-center gap-3">
 
-          <img
-            src={post.user.profileImg}
-            alt={post.user.username}
-            onClick={() => goToProfile(post.user.id)}
-            className="w-8 h-8 rounded-full object-cover cursor-pointer"
-          />
-
-          <h3
-            onClick={() => goToProfile(post.user.id)}
-            className="text-white text-sm font-semibold cursor-pointer hover:text-zinc-300 transition"
+          <Link
+            to={`/profile/${post.user.id}`}
+            className="flex items-center gap-3"
           >
-            {post.user.username}
-          </h3>
+            <img
+              src={post.user.profileImg}
+              alt={post.user.username}
+              className="w-8 h-8 rounded-full object-cover"
+            />
+
+            <h3 className="text-white text-sm font-semibold hover:underline">
+              {post.user.username}
+            </h3>
+          </Link>
+
+          {!isOwnPost && (
+            <>
+              <span className="text-zinc-600">•</span>
+
+              <FollowTextButton
+                user={post.user}
+              />
+            </>
+          )}
 
         </div>
 
@@ -40,6 +60,7 @@ const PostCard = ({ post }) => {
           size={18}
           className="text-zinc-400 cursor-pointer"
         />
+
       </div>
 
       {/* Post Image */}

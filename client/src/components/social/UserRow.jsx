@@ -1,71 +1,35 @@
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
 
-const UserRow = ({
-  user,
-  actionLabel,
-  onAction,
-  isLoading = false,
-  showAction = false,
-}) => {
+import FollowTextButton from "./FollowTextButton";
+
+const UserRow = ({ user }) => {
   return (
-    <div className="flex items-center justify-between px-4 py-3 hover:bg-zinc-900 transition rounded-lg">
-      {/* Left */}
+    <div className="flex items-center justify-between px-4 py-3 hover:bg-zinc-900 transition">
+
       <Link
         to={`/profile/${user.id}`}
-        className="flex items-center gap-3 flex-1 min-w-0"
+        className="flex items-center gap-3 flex-1"
       >
         <img
           src={user.profileImg}
           alt={user.username}
-          className="w-12 h-12 rounded-full object-cover border border-zinc-700"
+          className="w-11 h-11 rounded-full object-cover"
         />
 
-        <div className="min-w-0">
-          <p className="text-white font-semibold truncate">
+        <div>
+          <p className="font-semibold text-white">
             {user.username}
           </p>
 
           {user.bio && (
-            <p className="text-sm text-zinc-400 truncate">
+            <p className="text-sm text-zinc-500 line-clamp-1">
               {user.bio}
             </p>
           )}
         </div>
       </Link>
 
-      {/* Right */}
-      {showAction && (
-        <button
-          onClick={() => onAction?.(user.id)}
-          disabled={isLoading}
-          className="
-            min-w-[90px]
-            flex
-            items-center
-            justify-center
-            rounded-lg
-            bg-blue-600
-            hover:bg-blue-500
-            disabled:opacity-50
-            px-4
-            py-2
-            text-sm
-            font-semibold
-            text-white
-            transition
-          "
-        >
-          {isLoading ? (
-            <Loader2
-              size={16}
-              className="animate-spin"
-            />
-          ) : (
-            actionLabel
-          )}
-        </button>
-      )}
+      <FollowTextButton user={user} />
     </div>
   );
 };
