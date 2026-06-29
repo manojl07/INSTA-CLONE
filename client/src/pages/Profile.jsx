@@ -1,12 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
 import { getUserPosts } from '../api/post.api';
-import Loader from '../components/UI/Loader';
+// import Loader from '../components/UI/Loader';
 import ProfileHeader from '../components/profile/ProfileHeader';
 import ProfilePostsGrid from '../components/profile/ProfilePostGrid';
 import { useAuth } from "../hooks/useAuth";
 import { useState } from 'react';
 import PostModal from "../components/post/PostModal";
-import {queryKeys} from '../constants/queryKeys'
+import { queryKeys } from '../constants/queryKeys'
+import SkeletonGrid from "../components/UI/SkeletonGrid";
+import ErrorState from "../components/UI/ErrorState";
 
 const Profile = () => {
 
@@ -23,24 +25,28 @@ const Profile = () => {
   });
 
   if (isLoading) {
-    return <Loader />
+    return (
+      <div className="min-h-screen bg-black">
+
+        <div className="max-w-4xl mx-auto py-10">
+
+          <SkeletonGrid />
+
+        </div>
+
+      </div>
+    );
   }
 
   if (isError) {
-    console.log(error);
-
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-red-500 text-xl font-semibold">
-            Request Failed
-          </h2>
-
-          <p className="text-zinc-400 mt-2">
-            {error.response?.data?.message || error.message}
-          </p>
-        </div>
-      </div>
+      <ErrorState
+        title="Couldn't load profile"
+        message={
+          error.response?.data?.message ||
+          error.message
+        }
+      />
     );
   }
 

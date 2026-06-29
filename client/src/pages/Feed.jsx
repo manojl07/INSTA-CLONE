@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { getFeed } from '../api/post.api'
 import PostCard from '../components//post/PostCard'
-import Loader from '../components/UI/Loader';
-import {queryKeys} from '../constants/queryKeys'
+// import Loader from '../components/UI/Loader';
+import { queryKeys } from '../constants/queryKeys'
+import SkeletonCard from "../components/UI/SkeletonCard";
 
 const Feed = () => {
 
@@ -13,8 +14,18 @@ const Feed = () => {
 
   if (isLoading) {
     return (
-      <Loader />
-    )
+      <div className="min-h-screen bg-black py-10">
+
+        <div className="max-w-lg mx-auto space-y-5">
+
+          {[...Array(5)].map((_, index) => (
+            <SkeletonCard key={index} />
+          ))}
+
+        </div>
+
+      </div>
+    );
   }
 
   if (error) {

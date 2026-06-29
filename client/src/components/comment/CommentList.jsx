@@ -1,9 +1,11 @@
+import SkeletonComments from "../UI/SketetonComments";
+import EmptyState from "../UI/EmptyState";
 
 import { useAuth } from '../../hooks/useAuth'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteComment, getComments } from '../../api/comment.api';
 import CommentItem from './CommentItem';
-import {queryKeys} from '../../constants/queryKeys'
+import { queryKeys } from '../../constants/queryKeys'
 
 const CommentList = ({ postId, queryKey }) => {
 
@@ -26,21 +28,17 @@ const CommentList = ({ postId, queryKey }) => {
   })
 
   if (isLoading) {
-    return (
-      <div className='max-h-[450px] overflow-y-auto p-4'>
-
-        <p className='text-zinc-400 text-center'>Loading comments...</p>
-      </div>
-    )
+    return <SkeletonComments />;
   }
 
   if (!data?.data?.length) {
     return (
-      <div className='max-h-[450px] overflow-y-auto p-4'>
-
-        <p className='text-zinc-500 text-center py-6'>No comments yet</p>
-      </div>
-    )
+      <EmptyState
+        icon="💬"
+        title="No Comments Yet"
+        description="Start the conversation."
+      />
+    );
   }
 
 

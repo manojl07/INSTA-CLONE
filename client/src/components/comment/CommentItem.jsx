@@ -1,3 +1,4 @@
+import ButtonSpinner from "../UI/ButtonSpinner";
 
 
 const CommentItem = ({ comment, currentUserId, onDelete, deleting }) => {
@@ -16,7 +17,15 @@ const CommentItem = ({ comment, currentUserId, onDelete, deleting }) => {
       </div>
 
       {comment.user.id === currentUserId && (
-        <button onClick={() => onDelete(comment.id)} disabled={deleting} className="text-[11px] text-red-500 hover:text-red-400 transition">Delete</button>
+        <button onClick={() => onDelete(comment.id)} disabled={deleting} className="text-[11px] text-red-500 hover:text-red-400 transition">
+          {deleting ? (
+            <>
+              <ButtonSpinner size={14} /> Deleting...
+            </>
+          ) : (
+            "Delete"
+          )}
+        </button>
       )}
 
     </div>

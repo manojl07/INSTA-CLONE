@@ -1,11 +1,21 @@
+import EmptyState from "../UI/EmptyState";
+
+
 
 const ProfilePostsGrid = ({ posts, onPostClick }) => {
 
   if (!posts.length) {
     return (
-      <div className='text-center text-zinc-500 py-20'>No Posts Yet</div>
-    )
+      <EmptyState
+        icon="📷"
+        title="No Posts Yet"
+        description="Share your first photo."
+      />
+    );
   }
+
+
+
   return (
     <div className='max-w-2xl mx-auto grid grid-cols-3 gap-1 '>
 
