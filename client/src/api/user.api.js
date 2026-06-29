@@ -4,7 +4,7 @@ import API from './axios'
    GET USER PROFILE
 ---------------------------*/
 
-export const getUserProfile = aync (userId) => {
+export const getUserProfile = async (userId) => {
   const {data} = await API.get(`/users/${userId}`);
 
   return data;
@@ -24,7 +24,7 @@ export const toggleFollow = async (userId) => {
    SEARCH USERS
 ---------------------------*/
 
-export const searchUsers = async (querry) => {
+export const searchUsers = async (query) => {
   const {data} = await API.get(`/users/search?q=${query}`)
 
   return data;

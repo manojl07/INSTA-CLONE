@@ -7,7 +7,7 @@ import { deleteComment, getComments } from '../../api/comment.api';
 import CommentItem from './CommentItem';
 import { queryKeys } from '../../constants/queryKeys'
 
-const CommentList = ({ postId, queryKey }) => {
+const CommentList = ({ postId, queryKey, onNavigate }) => {
 
 
   const { user } = useAuth();

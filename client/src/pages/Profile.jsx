@@ -7,14 +7,18 @@ import { useAuth } from "../hooks/useAuth";
 import { getUserProfile } from "../api/user.api";
 import { getUserPosts } from "../api/post.api";
 
-import Loader from "../components/UI/Loader";
+import SkeletonProfile from "../components/UI/SkeletonProfile";
 
 import ProfileHeader from "../components/profile/ProfileHeader";
 import ProfilePostsGrid from "../components/profile/ProfilePostGrid";
 
 import PostModal from "../components/post/PostModal";
+import EditProfileModal from "../components/profile/EditProfileModal";
 
 const Profile = () => {
+
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
   const { user } = useAuth();
 
   const { userId } = useParams();
@@ -55,7 +59,7 @@ const Profile = () => {
     });
 
   if (profileLoading || postsLoading) {
-    return <Loader />;
+    return <SkeletonProfile />;
   }
 
   return (
@@ -65,6 +69,9 @@ const Profile = () => {
 
         <ProfileHeader
           user={profileData.data}
+          onEditProfile={() =>
+            setIsEditOpen(true)
+          }
         />
 
         <ProfilePostsGrid
@@ -82,6 +89,12 @@ const Profile = () => {
             setSelectedPost(null);
             setIsModalOpen(false);
           }}
+        />
+
+        <EditProfileModal
+          isOpen={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          user={profileData.data}
         />
 
       </div>

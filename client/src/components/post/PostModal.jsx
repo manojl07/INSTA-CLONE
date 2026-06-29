@@ -117,6 +117,7 @@ const PostModal = ({
                   queryKey={queryKeys.comments(
                     currentPost.id
                   )}
+                  onNavigate={onClose}
                 />
               </div>
 

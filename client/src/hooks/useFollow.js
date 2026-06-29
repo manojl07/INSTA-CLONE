@@ -1,4 +1,4 @@
-import { useMuatation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast'
 
 import { toggleFollow } from '../api/user.api'
@@ -16,7 +16,7 @@ const useFollow = (userId) => {
       queryClient.setQueryData(["user-profile", userId], (old) => {
         if (!old) return old;
 
-        const following = old.date.isFollowing;
+        const following = old.data.isFollowing;
 
         return {
           ...old,
@@ -28,21 +28,25 @@ const useFollow = (userId) => {
         }
       })
       return { previous };
-    }
+    },
 
-    onError: (_, _, context) => {
-      if(context?.previous){
-        queryClient.setQueryData(["user-profile", userId], context.previous)
+    onError: (_error, _variables, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(
+          ["user-profile", userId],
+          context.previous
+        );
       }
+
       toast.error("Something went wrong");
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({queryKey: ["user-profile", userId]})
+      queryClient.invalidateQueries({ queryKey: ["user-profile", userId] })
 
-      queryClient.invalidateQueries({queryKey: ["feed"]})
+      queryClient.invalidateQueries({ queryKey: ["feed"] })
 
-      queryClient.invalidateQueries({queryKey: ["user-posts"]})
+      queryClient.invalidateQueries({ queryKey: ["user-posts"] })
     }
   })
 }

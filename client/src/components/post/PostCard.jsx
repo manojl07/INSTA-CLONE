@@ -2,10 +2,13 @@ import { MoreHorizontal, } from "lucide-react";
 import { useState } from "react";
 import PostActions from "./PostActions";
 import PostModal from "./PostModal";
+import useProfileNavigation from "../../hooks/useProfileNavigation";
 
 const PostCard = ({ post }) => {
 
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+
+  const goToProfile = useProfileNavigation();
 
 
 
@@ -16,18 +19,21 @@ const PostCard = ({ post }) => {
       <div className="flex items-center justify-between px-4 py-3">
 
         <div className="flex items-center gap-3">
+
           <img
-            src={
-              post.user.profileImg ||
-              "https://via.placeholder.com/150"
-            }
+            src={post.user.profileImg}
             alt={post.user.username}
-            className="w-8 h-8 rounded-full object-cover"
+            onClick={() => goToProfile(post.user.id)}
+            className="w-8 h-8 rounded-full object-cover cursor-pointer"
           />
 
-          <h3 className="text-white text-sm font-semibold">
+          <h3
+            onClick={() => goToProfile(post.user.id)}
+            className="text-white text-sm font-semibold cursor-pointer hover:text-zinc-300 transition"
+          >
             {post.user.username}
           </h3>
+
         </div>
 
         <MoreHorizontal

@@ -1,130 +1,230 @@
 import { Link } from "react-router-dom";
 import { ChevronDown, Plus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import useLogout from "../hooks/useLogout";
 import { useEffect, useRef, useState } from "react";
 
+import SearchBar from "./search/SearchBar";
+
 const Navbar = ({ onOpenModal }) => {
-
   const { user } = useAuth();
-
   const { logout, isLoggingOut } = useLogout();
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const dropdownRef = useRef(null);
 
   useEffect(() => {
     const close = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target)
+      ) {
         setOpen(false);
       }
-    }
+    };
 
-    window.addEventListener("click", close);
+    window.addEventListener("mousedown", close);
 
-    return () => {
-      window.removeEventListener("click", close)
-    }
-  }, [])
-
-
+    return () =>
+      window.removeEventListener("mousedown", close);
+  }, []);
 
   return (
-    <nav className="sticky top-0 z-50 bg-black border-b border-zinc-800">
-      <div className="max-w-6xl mx-auto h-16 px-6 grid grid-cols-3 items-center">
-        {/* Left */}
+    <nav className="sticky top-0 z-50 border-b border-zinc-800 bg-black/95 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-8">
 
-        <div>
-          <Link
-            to="/"
-            className="text-xl font-bold text-white"
-          >
-            Instagram Clone
-          </Link>
+        {/* LEFT */}
+
+        <Link
+          to="/"
+          className="text-2xl font-extrabold tracking-tight text-white"
+        >
+          Instagram Clone
+        </Link>
+
+        {/* CENTER */}
+
+        <div className="flex-1 flex justify-center px-12">
+          <div className="w-full max-w-md">
+            <SearchBar />
+          </div>
         </div>
 
-        {/* Center */}
-
-        <div className="flex justify-center">
-          <button
-            onClick={onOpenModal}
-            className="text-white hover:text-blue-500 transition"
-          >
-            <Plus size={28} />
-          </button>
-        </div>
-
-        {/* Right */}
+        {/* RIGHT */}
 
         <div
-          className="flex justify-end relative"
           ref={dropdownRef}
+          className="flex items-center gap-4 relative"
         >
-          <button
-            onClick={() => setOpen(!open)}
-            className="flex items-center gap-2"
+
+          {/* CREATE BUTTON */}
+
+          <motion.button
+            onClick={onOpenModal}
+            whileHover={{
+              scale: 1.05,
+            }}
+            whileTap={{
+              scale: 0.95,
+            }}
+            transition={{
+              duration: 0.15,
+            }}
+            className="
+              flex
+              items-center
+              gap-2
+              rounded-xl
+              bg-blue-600
+              px-4
+              py-2
+              text-sm
+              font-semibold
+              text-white
+              shadow-lg
+              shadow-blue-600/20
+              transition
+              hover:bg-blue-500
+            "
+          >
+            <Plus size={18} />
+            New Post
+          </motion.button>
+
+          {/* PROFILE */}
+
+          <motion.button
+            whileTap={{
+              scale: 0.95,
+            }}
+            onClick={() =>
+              setOpen((prev) => !prev)
+            }
+            className="
+              flex
+              items-center
+              gap-2
+              rounded-full
+              transition
+            "
           >
             <img
               src={user?.profileImg}
-              alt=""
-              className="w-10 h-10 rounded-full object-cover"
+              alt={user?.username}
+              className="
+                h-11
+                w-11
+                rounded-full
+                border-2
+                border-zinc-700
+                object-cover
+                transition
+                hover:border-blue-500
+              "
             />
 
             <ChevronDown
-              size={18}
-              className="text-zinc-400"
+              size={16}
+              className={`text-zinc-400 transition duration-200 ${
+                open ? "rotate-180" : ""
+              }`}
             />
-          </button>
+          </motion.button>
 
-          {open && (
-            <div
-              className="
-              absolute
-              right-0
-              top-14
-              w-48
-              rounded-xl
-              border
-              border-zinc-800
-              bg-zinc-900
-              shadow-xl
-              overflow-hidden
-            "
-            >
-              <Link
-                to="/profile"
-                onClick={() => setOpen(false)}
-                className="
-                block
-                px-4
-                py-3
-                text-white
-                hover:bg-zinc-800
-              "
-              >
-                Profile
-              </Link>
+          <AnimatePresence>
 
-              <button
-                onClick={() => logout()}
-                disabled={isLoggingOut}
+            {open && (
+
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  y: -8,
+                  scale: 0.97,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                  y: -8,
+                  scale: 0.97,
+                }}
+                transition={{
+                  duration: 0.18,
+                }}
                 className="
-                w-full
-                text-left
-                px-4
-                py-3
-                text-red-500
-                hover:bg-zinc-800
-              "
+                  absolute
+                  right-0
+                  top-16
+                  w-56
+                  overflow-hidden
+                  rounded-2xl
+                  border
+                  border-zinc-800
+                  bg-zinc-900
+                  shadow-2xl
+                "
               >
-                {isLoggingOut
-                  ? "Logging out..."
-                  : "Logout"}
-              </button>
-            </div>
-          )}
+
+                {/* USER */}
+
+                <div className="border-b border-zinc-800 p-4">
+
+                  <p className="font-semibold text-white">
+                    {user?.username}
+                  </p>
+
+                  <p className="mt-1 text-xs text-zinc-400">
+                    @{user?.username}
+                  </p>
+
+                </div>
+
+                <Link
+                  to="/profile"
+                  onClick={() => setOpen(false)}
+                  className="
+                    block
+                    px-4
+                    py-3
+                    text-white
+                    transition
+                    hover:bg-zinc-800
+                  "
+                >
+                  Profile
+                </Link>
+
+                <button
+                  disabled={isLoggingOut}
+                  onClick={() => logout()}
+                  className="
+                    w-full
+                    px-4
+                    py-3
+                    text-left
+                    text-red-500
+                    transition
+                    hover:bg-zinc-800
+                  "
+                >
+                  {isLoggingOut
+                    ? "Logging out..."
+                    : "Logout"}
+                </button>
+
+              </motion.div>
+
+            )}
+
+          </AnimatePresence>
+
         </div>
+
       </div>
     </nav>
   );
