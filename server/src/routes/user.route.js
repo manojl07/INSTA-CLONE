@@ -1,24 +1,34 @@
-const express = require('express')
+const express = require("express");
+
 const router = express.Router();
-const authMiddleware = require('../middlewares/auth.middleware')
+
+const authMiddleware = require("../middlewares/auth.middleware");
+
 const {
   getUserProfileController,
   toggleFollowController,
   searchUserController,
+  getFollowersController,
+  getFollowingController,
 } = require("../controllers/user.controller");
 
-/*
-IMPORTANT
+router.get(
+  "/search",
+  authMiddleware,
+  searchUserController
+);
 
-Keep /search BEFORE /:userId
-otherwise Express thinks
+router.get(
+  "/:userId/followers",
+  authMiddleware,
+  getFollowersController
+);
 
-/search
-
-is a userId.
-*/
-
-router.get('/search', authMiddleware, searchUserController);
+router.get(
+  "/:userId/following",
+  authMiddleware,
+  getFollowingController
+);
 
 router.get(
   "/:userId",
@@ -26,6 +36,10 @@ router.get(
   getUserProfileController
 );
 
-router.patch('/:userId/follow', authMiddleware, toggleFollowController);
+router.patch(
+  "/:userId/follow",
+  authMiddleware,
+  toggleFollowController
+);
 
 module.exports = router;

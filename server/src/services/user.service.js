@@ -101,4 +101,43 @@ const searchUser = async (query) => {
   }))
 }
 
-module.exports = { getUserProfile, toggleFollow, searchUser }
+
+/* ----------------------------------------
+   FOLLOWERS
+-----------------------------------------*/
+
+const getFollowers = async ({profileUserId, currentUserId}) => {
+  const user = await User.findById(profileUserId).populate("followers", "username profileImg followers")
+
+  if(!user){
+    throw new ApiError(404, "User not found")
+  }
+
+  return user.followers.map((follower) => ({
+    id: follower._id,
+    username: follower.username,
+    profile: follower.profileImg,
+    isFollowing: follower.followers.some((id) => id.toString() === currentUserId)
+  }))
+}
+
+/* ----------------------------------------
+   FOLLOWING
+-----------------------------------------*/
+
+const getFollowing = async ({profileUserId, currentUserId}) => {
+  const user = await User.findById(profileUserId).populate("following", "username profileimg followers")
+
+  if(!user){
+    throw new ApiError(404, "User not found");
+  }
+
+  return user.following.map((following) => ({
+    id: following._id,
+    username: following.username,
+    profileImg: following.profileImg,
+    isFollowing: following.followers.some((id) => id.toString() === currentUserId)
+  }))
+}
+
+module.exports = { getUserProfile, toggleFollow, searchUser, getFollowers, getFollowing }

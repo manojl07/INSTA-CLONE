@@ -38,4 +38,44 @@ const searchUserController = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "User fetched successfully", users))
 })
 
-module.exports = {getUserProfileController, toggleFollowController, searchUserController}
+const getFollowersController =
+  asyncHandler(async (req, res) => {
+    const result =
+      await userService.getFollowers({
+        profileUserId: req.params.userId,
+        currentUserId: req.user.id,
+      });
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        "Followers fetched successfully",
+        result
+      )
+    );
+  });
+
+const getFollowingController =
+  asyncHandler(async (req, res) => {
+    const result =
+      await userService.getFollowing({
+        profileUserId: req.params.userId,
+        currentUserId: req.user.id,
+      });
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        "Following fetched successfully",
+        result
+      )
+    );
+  });
+
+module.exports = {
+  getUserProfileController,
+  toggleFollowController,
+  searchUserController,
+  getFollowersController,
+  getFollowingController,
+};
