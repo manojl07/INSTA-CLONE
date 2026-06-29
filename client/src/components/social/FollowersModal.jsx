@@ -5,7 +5,7 @@ import useFollowers from "../../hooks/useFollowers";
 
 import UserRow from "./UserRow";
 
-import { backdropVariants, modalVariants } from "../../utils/animations";
+import { backdropVariants, modalVariants } from "../../constants/animations";
 
 const FollowersModal = ({
   isOpen,

@@ -7,7 +7,7 @@ import UserRow from "./UserRow";
 import {
   backdropVariants,
   modalVariants,
-} from "../../utils/animations";
+} from "../../constants/animations";
 
 const FollowingModal = ({
   isOpen,
