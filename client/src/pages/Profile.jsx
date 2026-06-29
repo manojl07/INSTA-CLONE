@@ -69,9 +69,8 @@ const Profile = () => {
 
         <ProfileHeader
           user={profileData.data}
-          onEditProfile={() =>
-            setIsEditOpen(true)
-          }
+          isOwnProfile={profileId === user.id}
+          onEditProfile={() => setIsEditOpen(true)}
         />
 
         <ProfilePostsGrid
