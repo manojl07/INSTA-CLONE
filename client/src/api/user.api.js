@@ -10,9 +10,15 @@ export const getUserProfile = async (userId) => {
   return data;
 }
 
-/* --------------------------
-   FOLLOW / UNFOLLOW
----------------------------*/
+export const updateProfile = async (formData) => {
+  const {data} = await API.patch('/users/profile', formData);
+
+  return data;
+}
+
+/* -----------------------------
+   Follow System
+------------------------------ */
 
 export const toggleFollow = async (userId) => {
   const {data} = await API.patch(`/users/${userId}/follow`)
@@ -20,12 +26,38 @@ export const toggleFollow = async (userId) => {
   return data;
 }
 
+/* -----------------------------
+   Followers
+------------------------------ */
+
+export const getFollowers = async (userId) => {
+  const {data} = await API.get(`/users/${userId}/followers`)
+
+  return data;
+}
+
+/* -----------------------------
+   Following
+------------------------------ */
+
+export const getFollowing = async (userId) => {
+  const {data} = await API.get(`/users/${userId}/following`);
+
+  return data;
+}
+
+
+
 /* --------------------------
    SEARCH USERS
 ---------------------------*/
 
 export const searchUsers = async (query) => {
-  const {data} = await API.get(`/users/search?q=${query}`)
+  const params = new URLSearchParams({
+    q: query,
+  });
+
+  const { data } = await API.get(`/users/search?${params}`);
 
   return data;
-}
+};
