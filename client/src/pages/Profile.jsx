@@ -1,66 +1,74 @@
-import { useQuery } from '@tanstack/react-query'
-import { getUserPosts } from '../api/post.api';
-// import Loader from '../components/UI/Loader';
-import ProfileHeader from '../components/profile/ProfileHeader';
-import ProfilePostsGrid from '../components/profile/ProfilePostGrid';
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+
 import { useAuth } from "../hooks/useAuth";
-import { useState } from 'react';
+
+import { getUserProfile } from "../api/user.api";
+import { getUserPosts } from "../api/post.api";
+
+import Loader from "../components/UI/Loader";
+
+import ProfileHeader from "../components/profile/ProfileHeader";
+import ProfilePostsGrid from "../components/profile/ProfilePostGrid";
+
 import PostModal from "../components/post/PostModal";
-import { queryKeys } from '../constants/queryKeys'
-import SkeletonGrid from "../components/UI/SkeletonGrid";
-import ErrorState from "../components/UI/ErrorState";
 
 const Profile = () => {
+  const { user } = useAuth();
+
+  const { userId } = useParams();
+
+  const profileId = userId || user.id;
 
   const [selectedPost, setSelectedPost] = useState(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { user } = useAuth();
+  /* ------------------------
+     PROFILE
+  ------------------------- */
 
-  const { data: postsData, isLoading, isError, error, } = useQuery({
-    queryKey: queryKeys.userPosts(user.id),
-    queryFn: () => getUserPosts({ userId: user.id }),
-    enabled: !!user,
-  });
+  const { data: profileData, isLoading: profileLoading } =
+    useQuery({
+      queryKey: ["user-profile", profileId],
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black">
+      queryFn: () => getUserProfile(profileId),
 
-        <div className="max-w-4xl mx-auto py-10">
+      enabled: !!profileId,
+    });
 
-          <SkeletonGrid />
+  /* ------------------------
+     POSTS
+  ------------------------- */
 
-        </div>
+  const { data: postsData, isLoading: postsLoading } =
+    useQuery({
+      queryKey: ["user-posts", profileId],
 
-      </div>
-    );
+      queryFn: () =>
+        getUserPosts({
+          userId: profileId,
+        }),
+
+      enabled: !!profileId,
+    });
+
+  if (profileLoading || postsLoading) {
+    return <Loader />;
   }
-
-  if (isError) {
-    return (
-      <ErrorState
-        title="Couldn't load profile"
-        message={
-          error.response?.data?.message ||
-          error.message
-        }
-      />
-    );
-  }
-
-
 
   return (
-    <div className='min-h-screen bg-black'>
+    <div className="min-h-screen bg-black">
 
-      <div className='max-w-4xl mx-auto'>
+      <div className="max-w-4xl mx-auto">
 
-        <ProfileHeader user={user} />
+        <ProfileHeader
+          user={profileData.data}
+        />
 
         <ProfilePostsGrid
-          posts={postsData?.data?.posts || []}
+          posts={postsData.data.posts}
           onPostClick={(post) => {
             setSelectedPost(post);
             setIsModalOpen(true);
@@ -69,15 +77,17 @@ const Profile = () => {
 
         <PostModal
           isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedPost(null);
-          }}
           post={selectedPost}
+          onClose={() => {
+            setSelectedPost(null);
+            setIsModalOpen(false);
+          }}
         />
-      </div>
-    </div>
-  )
-}
 
-export default Profile
+      </div>
+
+    </div>
+  );
+};
+
+export default Profile;
