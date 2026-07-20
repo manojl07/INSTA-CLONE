@@ -26,14 +26,9 @@ const PostModal = ({
 
   const queryClient = useQueryClient();
 
-  const userPosts = queryClient.getQueryData([
-    "user-posts",
-    user?.id,
-  ]);
+  const userPosts = queryClient.getQueryData(queryKeys.userPosts(user.id));
 
-  const feedPosts = queryClient.getQueryData([
-    "feed",
-  ]);
+  const feedPosts = queryClient.getQueryData(queryKeys.feed);
 
   const currentPost = post
     ? userPosts?.data?.posts?.find(
@@ -126,10 +121,7 @@ const PostModal = ({
                 <div className="p-4">
                   <PostActions
                     post={currentPost}
-                    queryKey={[
-                      "user-posts",
-                      user.id,
-                    ]}
+                    queryKey={queryKeys.userPosts(user.id)}
                   />
                 </div>
 
@@ -139,10 +131,7 @@ const PostModal = ({
 
                 <CommentInput
                   postId={currentPost.id}
-                  queryKey={[
-                    "comments",
-                    currentPost.id,
-                  ]}
+                  queryKey={queryKeys.comments(currentPost.id)}
                 />
 
               </div>

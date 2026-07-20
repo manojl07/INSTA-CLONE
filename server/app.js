@@ -16,7 +16,10 @@ const errorHandler = require('./src/middlewares/error.middleware')
 const app = express();
 app.use(helmet());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: [
+    "http://localhost:5173",
+    "https://insta-clone-eight-dusky.vercel.app/"
+  ],
   credentials: true,
 }));
 app.use(morgan('dev'));
@@ -33,7 +36,7 @@ app.use('/api/users', userRouter)
 app.use(errorHandler);
 
 app.get('/', (req, res) => {
-  res.json({success: true, message: "Instagram Clone API Running"})
+  res.json({ success: true, message: "Instagram Clone API Running" })
 })
 
 module.exports = app;

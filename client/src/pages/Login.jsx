@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { getMe, loginUser } from "../api/auth.api";
 import toast from "react-hot-toast";
+import {ROUTES} from '../constants/routes'
 
 
 
@@ -30,12 +31,7 @@ const Login = () => {
     },
 
     onError: (error) => {
-      console.log(error.response?.data);
-
-      toast.error(
-        error.response?.data?.message ||
-        "Invalid credentials"
-      );
+      toast.error(error.response?.data?.message || "Invalid credentials");
     }
   });
 
@@ -79,7 +75,7 @@ const Login = () => {
         </div>
         <p className="text-center text-zinc-400 mt-5">
           Don't have an account?
-          <Link to='/register' className="text-blue-500 ml-2">Register</Link>
+          <Link to={ROUTES.REGISTER} className="text-blue-500 ml-2">Register</Link>
         </p>
       </form>
     </div>

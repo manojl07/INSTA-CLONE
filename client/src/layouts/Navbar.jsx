@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import useLogout from "../hooks/useLogout";
 import { useEffect, useRef, useState } from "react";
+import {ROUTES} from '../constants/routes'
 
-import SearchBar from "./search/SearchBar";
+import SearchBar from "../components/search/SearchBar";
 
 const Navbar = ({ onOpenModal }) => {
   const { user } = useAuth();
@@ -38,10 +39,10 @@ const Navbar = ({ onOpenModal }) => {
         {/* LEFT */}
 
         <Link
-          to="/"
+          to={ROUTES.HOME}
           className="text-2xl font-extrabold tracking-tight text-white"
         >
-          Instagram Clone
+          Orbit
         </Link>
 
         {/* CENTER */}
@@ -72,23 +73,7 @@ const Navbar = ({ onOpenModal }) => {
             transition={{
               duration: 0.15,
             }}
-            className="
-              flex
-              items-center
-              gap-2
-              rounded-xl
-              bg-blue-600
-              px-4
-              py-2
-              text-sm
-              font-semibold
-              text-white
-              shadow-lg
-              shadow-blue-600/20
-              transition
-              hover:bg-blue-500
-            "
-          >
+            className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-500" >
             <Plus size={18} />
             New Post
           </motion.button>
@@ -102,28 +87,11 @@ const Navbar = ({ onOpenModal }) => {
             onClick={() =>
               setOpen((prev) => !prev)
             }
-            className="
-              flex
-              items-center
-              gap-2
-              rounded-full
-              transition
-            "
-          >
+            className="flex items-center gap-2 rounded-full transition" >
             <img
               src={user?.profileImg}
               alt={user?.username}
-              className="
-                h-11
-                w-11
-                rounded-full
-                border-2
-                border-zinc-700
-                object-cover
-                transition
-                hover:border-blue-500
-              "
-            />
+              className="h-11 w-11 rounded-full border-2 border-zinc-700 object-cover transition hover:border-blue-500" />
 
             <ChevronDown
               size={16}
@@ -156,19 +124,7 @@ const Navbar = ({ onOpenModal }) => {
                 transition={{
                   duration: 0.18,
                 }}
-                className="
-                  absolute
-                  right-0
-                  top-16
-                  w-56
-                  overflow-hidden
-                  rounded-2xl
-                  border
-                  border-zinc-800
-                  bg-zinc-900
-                  shadow-2xl
-                "
-              >
+                className="absolute right-0 top-16 w-56 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl">
 
                 {/* USER */}
 
@@ -185,33 +141,16 @@ const Navbar = ({ onOpenModal }) => {
                 </div>
 
                 <Link
-                  to="/profile"
+                  to={ROUTES.PROFILE}
                   onClick={() => setOpen(false)}
-                  className="
-                    block
-                    px-4
-                    py-3
-                    text-white
-                    transition
-                    hover:bg-zinc-800
-                  "
-                >
+                  className="block px-4 py-3 text-white transition hover:bg-zinc-800" >
                   Profile
                 </Link>
 
                 <button
                   disabled={isLoggingOut}
                   onClick={() => logout()}
-                  className="
-                    w-full
-                    px-4
-                    py-3
-                    text-left
-                    text-red-500
-                    transition
-                    hover:bg-zinc-800
-                  "
-                >
+                  className="w-full px-4 py-3 text-lef text-red-500 transition hover:bg-zinc-800" >
                   {isLoggingOut
                     ? "Logging out..."
                     : "Logout"}

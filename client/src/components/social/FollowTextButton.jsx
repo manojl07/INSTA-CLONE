@@ -7,9 +7,6 @@ const FollowTextButton = ({ user }) => {
     isPending,
   } = useToggleFollow(user);
 
-
-  console.log("Follow button:", user.username, isFollowing);
-
   return (
     <button
       onClick={toggleFollow}

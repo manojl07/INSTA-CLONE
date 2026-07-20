@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast'
 
 import { toggleFollow } from '../api/user.api'
+import { queryKeys } from "../constants/queryKeys";
 
 const useFollow = (userId) => {
   const queryClient = useQueryClient();
@@ -9,9 +10,9 @@ const useFollow = (userId) => {
   return useMutation({
     mutationFn: () => toggleFollow(userId),
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["user-profile", userId] })
+      await queryClient.cancelQueries({ queryKey: queryKeys.profile(userId) })
 
-      const previous = queryClient.getQueryData(["user-profile", userId])
+      const previous = queryClient.getQueryData(queryKeys.profile(userId))
 
       queryClient.setQueryData(["user-profile", userId], (old) => {
         if (!old) return old;
@@ -33,7 +34,7 @@ const useFollow = (userId) => {
     onError: (_error, _variables, context) => {
       if (context?.previous) {
         queryClient.setQueryData(
-          ["user-profile", userId],
+          queryKeys.profile(userId),
           context.previous
         );
       }
@@ -42,11 +43,11 @@ const useFollow = (userId) => {
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-profile", userId] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile(userId) })
 
-      queryClient.invalidateQueries({ queryKey: ["feed"] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.feed })
 
-      queryClient.invalidateQueries({ queryKey: ["user-posts"] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.userPosts(userId) })
     }
   })
 }

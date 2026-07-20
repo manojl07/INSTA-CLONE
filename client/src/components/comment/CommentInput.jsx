@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../../hooks/useAuth'
 import { createComment } from "../../api/comment.api";
 import ButtonSpinner from "../UI/ButtonSpinner";
+import { queryKeys } from "../../constants/queryKeys";
 
 
 const CommentInput = ({ postId, queryKey, onCommentCreated }) => {
@@ -53,8 +54,8 @@ const CommentInput = ({ postId, queryKey, onCommentCreated }) => {
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey })
-      queryClient.invalidateQueries({ queryKey: ["feed"] })
-      queryClient.invalidateQueries({ queryKey: ["user-posts"] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.feed })
+      queryClient.invalidateQueries({ queryKey: queryKeys.userPosts(user.id) })
     }
   });
 

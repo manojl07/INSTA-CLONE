@@ -1,11 +1,12 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getFeed } from "../api/post.api";
+import { queryKeys } from "../constants/queryKeys";
 
 const PAGE_SIZE = 10;
 
 const useInfiniteFeed = () => {
   return useInfiniteQuery({
-    queryKey: ["feed"],
+    queryKey: queryKeys.feed,
 
     queryFn: ({ pageParam = 1 }) =>
       getFeed({

@@ -23,7 +23,7 @@ const CommentList = ({ postId, queryKey, onNavigate }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey })
       queryClient.invalidateQueries({ queryKey: queryKeys.feed })
-      queryClient.invalidateQueries({ queryKey: ["user-posts"] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.userPosts(user.id) })
     }
   })
 

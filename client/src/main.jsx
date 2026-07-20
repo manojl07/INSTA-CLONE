@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { Toaster } from 'react-hot-toast';
-import AuthInitializer from './components/AuthInitializer.jsx';
+import AuthInitializer from './layouts/AuthInitializer.jsx';
 
 
 const queryClient = new QueryClient();

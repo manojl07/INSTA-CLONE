@@ -1,4 +1,4 @@
-import { MoreHorizontal, } from "lucide-react";
+// import { MoreHorizontal, } from "lucide-react";
 import { useState } from "react";
 import PostActions from "./PostActions";
 import PostModal from "./PostModal";
@@ -6,6 +6,8 @@ import useProfileNavigation from "../../hooks/useProfileNavigation";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import FollowTextButton from "../social/FollowTextButton";
+import { queryKeys } from "../../constants/queryKeys";
+import PostMenu from "./PostMenu";
 
 const PostCard = ({ post }) => {
 
@@ -16,8 +18,6 @@ const PostCard = ({ post }) => {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
 
   const goToProfile = useProfileNavigation();
-
-  console.log(post.user.isFollowing);
 
 
 
@@ -56,10 +56,7 @@ const PostCard = ({ post }) => {
 
         </div>
 
-        <MoreHorizontal
-          size={18}
-          className="text-zinc-400 cursor-pointer"
-        />
+        <PostMenu />
 
       </div>
 
@@ -74,7 +71,7 @@ const PostCard = ({ post }) => {
       <div className="px-4 py-3">
         <PostActions
           post={post}
-          queryKey={["feed"]}
+          queryKey={queryKeys.feed}
           onCommentClick={() =>
             setIsCommentsOpen(true)
           }
@@ -92,7 +89,7 @@ const PostCard = ({ post }) => {
 
         {/* Caption */}
         {post.caption && (
-          <p className="mt-2 text-sm text-white">
+          <p className="mt-2 text-sm text-white wrap-break-word">
             <span className="font-semibold mr-2">
               {post.user.username}
             </span>

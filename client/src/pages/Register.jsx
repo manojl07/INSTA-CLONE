@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { getMe, registerUser } from '../api/auth.api';
 import toast from 'react-hot-toast';
+import {ROUTES} from '../constants/routes';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -124,7 +125,7 @@ const Register = () => {
         <p className='text-center text-zinc-400 mt-5'>
           Already have an account?
           <Link
-            to='/login'
+            to={ROUTES.LOGIN}
             className="text-blue-500 ml-2"
           >Login</Link>
         </p>
