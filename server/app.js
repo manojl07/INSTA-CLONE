@@ -16,10 +16,7 @@ const errorHandler = require('./src/middlewares/error.middleware')
 const app = express();
 app.use(helmet());
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://insta-clone-eight-dusky.vercel.app/"
-  ],
+  origin: process.env.CLIENT_URL,
   credentials: true,
 }));
 app.use(morgan('dev'));
